@@ -64,7 +64,7 @@ Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"
 ```
 
 ## Extra Goodness
-I created a small script with the above PowerShell command which would allow me to perform error checking and use it as a Scheduled Task within Windows. The contents of that .ps1 file are below. The `Start-Transcript` command starts logging output from the script and saves it to the file specified.
+I created a small script with the above PowerShell command which would allow me to perform error checking and use it as a Scheduled Task within Windows. The contents of that .ps1 file are below. The `Start-Transcript` and `Stop-Transcipt` commands are for logging output from the script and saving it to the file specified. These two lines are useful for error checking but can be removed if not necessary.
 
 **WSL2VPN.ps1**
 ```
@@ -77,13 +77,18 @@ After reviewing the Cisco AnyConnect Secure Mobility Client event logs, I was ab
 
 **Trigger**
 Begin the task:   On an event
+
 Log:              Cisco AnyConnect Secure Mobile Client
+
 Source:           acvpnagent
+
 Event ID:         2057
 
 **Action**
 Action:           Start a program
+
 Program/script:   C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+
 Arguments:        -ExecutionPolicy Unrestricted -File C:\Scripts\WSL2VPN.ps1
 
 ![alt text](https://user-images.githubusercontent.com/18665523/120367990-83395400-c2df-11eb-9197-cf3a3524473e.png)
