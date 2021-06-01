@@ -1,15 +1,35 @@
 ![image](https://user-images.githubusercontent.com/18665523/120369246-fe4f3a00-c2e0-11eb-9816-a46cbe89862f.png)
-
 # WSL2overAnyConnect
+Maintaining Internet connectivty on WSL2 Ubuntu before and after connecting to a VPN with Cisco AnyConnect.
 
+## Objectives
+* Use Ubuntu via WSL2 to perform operations which require Internet connectivty regardless of VPN status.
 
-Alright man, here is what I did.
+## Requirements
+* Administrator account
+* PowerShell
+* Windows Subsystem for Linux 2 (WSL2) 
+* Cisco AnyConnect Secure Mobility Client
 
-/etc/wsl.conf
+## Windows Subsystem for Linux
+Windows Subsystem for Linux is a compatibility layer for running Linux binary executables natively on Windows 10 and Windows Server 2019.
+https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
+## Cisco AnyConnect Secure Mobility Client
+Cisco AnyConnect Secure Mobility Client empowers remote workers with frictionless, highly secure access to the enterprise network from any device, at any time, in any location while protecting the organization.
+https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html
+
+## Instructions
+1. Perform the following command to edit or create the file ```/etc/wsl.conf```
+```
+sudo nano /etc/wsl.conf
+```
+2. Enter the following information into the file.
+*/etc/wsl.conf
+```
 [network]
 generateResolvConf = false
-
+```
 /etc/resolv.conf
 
 nameserver 208.67.222.222
