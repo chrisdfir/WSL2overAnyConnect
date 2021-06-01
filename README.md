@@ -12,13 +12,11 @@ Maintaining Internet connectivty on WSL2 Ubuntu before and after connecting to a
 * Cisco AnyConnect Secure Mobility Client
 
 ## Windows Subsystem for Linux
-Windows Subsystem for Linux is a compatibility layer for running Linux binary executables natively on Windows 10 and Windows Server 2019.
-
+Windows Subsystem for Linux is a compatibility layer for running Linux binary executables natively on Windows 10 and Windows Server 2019.  
 https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
 ## Cisco AnyConnect Secure Mobility Client
-Cisco AnyConnect Secure Mobility Client empowers remote workers with frictionless, highly secure access to the enterprise network from any device, at any time, in any location while protecting the organization.
-
+Cisco AnyConnect Secure Mobility Client empowers remote workers with frictionless, highly secure access to the enterprise network from any device, at any time, in any location while protecting the organization.  
 https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html
 
 ## Instructions
@@ -40,7 +38,8 @@ generateResolvConf = false
 sudo nano /etc/resolv.conf
 ```
 
-4. Change the default information to reflect your preferred nameservers for DNS translation. The IP addresses used here reflect the OpenDNS servers. Find more information about that here: https://www.opendns.com/setupguide/#:~:text=Our%20nameservers%20are%20always%3A,208.67.
+4. Change the default information to reflect your preferred nameservers for DNS translation. The IP addresses used here reflect the OpenDNS servers. Find more information about that here:  
+https://www.opendns.com/setupguide/#:~:text=Our%20nameservers%20are%20always%3A,208.67.
 
 **/etc/resolv.conf**
 ```
@@ -75,20 +74,15 @@ Stop-Transcript
 
 After reviewing the Cisco AnyConnect Secure Mobility Client event logs, I was able to determine that *Event 2057 / Source: acvpnagent* was written after the routing table had changed due to VPN connect or disconnect. With this information, I was able to create a Scheduled Task with the following Trigger and Action.
 
-**Trigger**
-Begin the task:   On an event
+**Trigger**  
+Begin the task:   On an event  
+Log:              Cisco AnyConnect Secure Mobile Client  
+Source:           acvpnagent  
+Event ID:         2057  
 
-Log:              Cisco AnyConnect Secure Mobile Client
-
-Source:           acvpnagent
-
-Event ID:         2057
-
-**Action**
-Action:           Start a program
-
-Program/script:   C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
-
-Arguments:        -ExecutionPolicy Unrestricted -File C:\Scripts\WSL2VPN.ps1
+**Action**  
+Action:           Start a program  
+Program/script:   C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe  
+Arguments:        -ExecutionPolicy Unrestricted -File C:\Scripts\WSL2VPN.ps1  
 
 ![alt text](https://user-images.githubusercontent.com/18665523/120367990-83395400-c2df-11eb-9197-cf3a3524473e.png)
