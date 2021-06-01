@@ -20,11 +20,12 @@ Cisco AnyConnect Secure Mobility Client empowers remote workers with frictionles
 https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html
 
 ## Instructions
-1. Perform the following command to edit or create the file ```/etc/wsl.conf```
+1. Perform the following command to edit or create the file `/etc/wsl.conf`
 ```
 sudo nano /etc/wsl.conf
 ```
-2. Enter the following information into the file.
+
+2. Enter the information in the code block below into the file.
 
 **/etc/wsl.conf**
 ```
@@ -32,21 +33,55 @@ sudo nano /etc/wsl.conf
 generateResolvConf = false
 ```
 
-3. Perform the following command to edit the file ```/etc/resolv.conf```
+3. Use nano or your prefered text editor to edit the file `/etc/resolv.conf`
 ```
 sudo nano /etc/resolv.conf
 ```
+
 4. Change the default information to reflect your preferred nameservers for DNS translation. The IP addresses used here reflect the OpenDNS servers. Find more information about that here: https://www.opendns.com/setupguide/#:~:text=Our%20nameservers%20are%20always%3A,208.67.
+
 **/etc/resolv.conf**
 ```
 nameserver 208.67.222.222
 nameserver 208.67.220.220
 ```
-***Note: If /etc/resolv.conf is not editable, ensure you have elevated privileges when changing the contents of the file. You can also try to run ```sudo chattr -i /etc/resolv.conf``` as this will ensure the file is mutable object.***
 
+*Note: If /etc/resolv.conf is not editable, ensure you have elevated privileges when changing the contents of the file. You can also try to run `sudo chattr -i /etc/resolv.conf` as this will ensure the file is mutable object.*
 
-If /etc/resolv.conf is not able to edited, you can run sudo chattr -i /etc/resolv.conf. On the other hand, once you have made your changes to the file for your nameserver(s), you need to run sudo chattr +i /etc/resolv.conf to ensure the file is immutable. A quick test without full reboot showed this was persistent.. so far.
+5. Run the following command the make `/etc/resolv.conf` an immutable object. This will ensure the change to the file is persistent.
 
-Got around to setting up the scheduled task to launch the PowerShell. Set it to kick off on event 2057 from the AnyConnect log which times nicely to ensure I don't lose internet access on WSL2 whether I am on or off the VPN. /rant - I hope someone else can get some use out of this information.
+```
+sudo chattr +i /etc/resolv.conf
+```
+
+6. Connect to the VPN with Cisco AnyConnect
+7. Open PowerShell as admin and run the following command to re-prioritize local routing of Cisco AnyConnect traffic over WSL.
+
+```
+Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Set-NetIPInterface -InterfaceMetric 6000
+```
+
+## Extra Goodness
+I created a small script with the above PowerShell command which would allow me to perform error checking and use it as a Scheduled Task within Windows. The contents of that .ps1 file are below. The `Start-Transcript` command starts logging output from the script and saves it to the file specified.
+
+**WSL2VPN.ps1**
+```
+Start-Transcript -Path C:\Scripts\WSL2VPN.txt 
+Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Set-NetIPInterface -InterfaceMetric 6000  
+Stop-Transcript
+```
+
+After reviewing the Cisco AnyConnect Secure Mobility Client event logs, I was able to determine that *Event 2057 / Source: acvpnagent* was written after the routing table had changed due to VPN connect or disconnect. With this information, I was able to create a Scheduled Task with the following Trigger and Action.
+
+**Trigger**
+Begin the task:   On an event
+Log:              Cisco AnyConnect Secure Mobile Client
+Source:           acvpnagent
+Event ID:         2057
+
+**Action**
+Action:           Start a program
+Program/script:   C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Arguments:        -ExecutionPolicy Unrestricted -File C:\Scripts\WSL2VPN.ps1
 
 ![alt text](https://user-images.githubusercontent.com/18665523/120367990-83395400-c2df-11eb-9197-cf3a3524473e.png)
