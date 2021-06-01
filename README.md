@@ -47,7 +47,7 @@ nameserver 208.67.222.222
 nameserver 208.67.220.220
 ```
 
-*Note: If /etc/resolv.conf is not editable, ensure you have elevated privileges when changing the contents of the file. You can also try to run `sudo chattr -i /etc/resolv.conf` as this will ensure the file is mutable object.*
+*Note: If /etc/resolv.conf is not editable, ensure you have elevated privileges when changing the contents of the file. You can also try to run `sudo chattr -i /etc/resolv.conf` as this will ensure the file is a mutable object.*
 
 5. Run the following command the make `/etc/resolv.conf` an immutable object. This will ensure the change to the file is persistent.
 
