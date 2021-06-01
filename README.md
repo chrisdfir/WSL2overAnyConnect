@@ -25,15 +25,25 @@ https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-clien
 sudo nano /etc/wsl.conf
 ```
 2. Enter the following information into the file.
-*/etc/wsl.conf
+
+**/etc/wsl.conf**
 ```
 [network]
 generateResolvConf = false
 ```
-/etc/resolv.conf
 
+3. Perform the following command to edit the file ```/etc/resolv.conf```
+```
+sudo nano /etc/resolv.conf
+```
+4. Change the default information to reflect your preferred nameservers for DNS translation. The IP addresses used here reflect the OpenDNS servers. Find more information about that here: https://www.opendns.com/setupguide/#:~:text=Our%20nameservers%20are%20always%3A,208.67.
+**/etc/resolv.conf**
+```
 nameserver 208.67.222.222
 nameserver 208.67.220.220
+```
+***Note: If /etc/resolv.conf is not editable, ensure you have elevated privileges when changing the contents of the file. You can also try to run ```sudo chattr -i /etc/resolv.conf``` as this will ensure the file is mutable object.***
+
 
 If /etc/resolv.conf is not able to edited, you can run sudo chattr -i /etc/resolv.conf. On the other hand, once you have made your changes to the file for your nameserver(s), you need to run sudo chattr +i /etc/resolv.conf to ensure the file is immutable. A quick test without full reboot showed this was persistent.. so far.
 
